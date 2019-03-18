@@ -11,9 +11,7 @@ namespace Leopotam.Ecs.Ui.Components {
     [EcsOneFrame]
     public sealed class EcsUiInputEndEvent : IEcsAutoResetComponent {
         public string WidgetName;
-
         public InputField Sender;
-
         public string Value;
 
         void IEcsAutoResetComponent.Reset () {

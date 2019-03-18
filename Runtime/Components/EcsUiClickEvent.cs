@@ -6,15 +6,15 @@
 // ----------------------------------------------------------------------------
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Leopotam.Ecs.Ui.Components {
     [EcsOneFrame]
     public sealed class EcsUiClickEvent : IEcsAutoResetComponent {
         public string WidgetName;
-
         public GameObject Sender;
-
         public Vector2 Position;
+        public PointerEventData.InputButton Button;
 
         void IEcsAutoResetComponent.Reset () {
             Sender = null;

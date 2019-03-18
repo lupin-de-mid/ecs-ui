@@ -18,6 +18,7 @@ namespace Leopotam.Ecs.Ui.Actions {
                 var msg = Emitter.CreateMessage<EcsUiDropEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = gameObject;
+                msg.Button = eventData.button;
             }
         }
     }

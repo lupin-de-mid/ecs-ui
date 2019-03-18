@@ -11,7 +11,6 @@ namespace Leopotam.Ecs.Ui.Components {
     [EcsOneFrame]
     public sealed class EcsUiExitEvent : IEcsAutoResetComponent {
         public string WidgetName;
-
         public GameObject Sender;
 
         void IEcsAutoResetComponent.Reset () {
