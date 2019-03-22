@@ -19,6 +19,7 @@ namespace Leopotam.Ecs.Ui.Actions {
                 msg.WidgetName = WidgetName;
                 msg.Sender = gameObject;
                 msg.Position = eventData.position;
+                msg.Button = eventData.button;
             }
         }
 
@@ -28,6 +29,7 @@ namespace Leopotam.Ecs.Ui.Actions {
                 msg.WidgetName = WidgetName;
                 msg.Sender = gameObject;
                 msg.Position = eventData.position;
+                msg.Button = eventData.button;
             }
         }
     }

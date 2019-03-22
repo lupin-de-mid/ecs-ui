@@ -6,17 +6,16 @@
 // ----------------------------------------------------------------------------
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Leopotam.Ecs.Ui.Components {
     [EcsOneFrame]
     public sealed class EcsUiBeginDragEvent : IEcsAutoResetComponent {
         public string WidgetName;
-
         public GameObject Sender;
-
         public Vector2 Position;
-
         public int PointerId;
+        public PointerEventData.InputButton Button;
 
         void IEcsAutoResetComponent.Reset () {
             Sender = null;

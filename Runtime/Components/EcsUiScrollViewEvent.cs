@@ -12,9 +12,7 @@ namespace Leopotam.Ecs.Ui.Components {
     [EcsOneFrame]
     public sealed class EcsUiScrollViewEvent : IEcsAutoResetComponent {
         public string WidgetName;
-
         public ScrollRect Sender;
-
         public Vector2 Value;
 
         void IEcsAutoResetComponent.Reset () {
