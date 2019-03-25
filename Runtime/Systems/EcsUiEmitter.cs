@@ -37,7 +37,9 @@ namespace Leopotam.Ecs.Ui.Systems {
         /// </summary>
         public T CreateMessage<T> () where T : class, new () {
             ValidateEcsFields ();
-            return _world.CreateEntityWith<T> ();
+            T msg;
+            _world.CreateEntityWith<T> (out msg);
+            return msg;
         }
 
         /// <summary>
@@ -77,13 +79,11 @@ namespace Leopotam.Ecs.Ui.Systems {
 
         [System.Diagnostics.Conditional ("DEBUG")]
         void ValidateEcsFields () {
+#if DEBUG
             if (_world == null) {
                 throw new System.Exception ("[EcsUiEmitter] Call SetWorld() method first with valid world instance.");
             }
+#endif
         }
     }
 }
-
-#if !NET_4_6 && !NET_STANDARD_2_0
-#warning [Leopotam.Ecs.Ui] .Net Framework v3.5 support deprecated and will be removed in next release.
-#endif
