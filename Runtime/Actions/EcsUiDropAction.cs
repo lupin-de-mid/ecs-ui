@@ -14,7 +14,7 @@ namespace Leopotam.Ecs.Ui.Actions {
     /// </summary>
     public sealed class EcsUiDropAction : EcsUiActionBase, IDropHandler {
         void IDropHandler.OnDrop (PointerEventData eventData) {
-            if ((object) Emitter != null) {
+            if (IsValidForEvent ()) {
                 var msg = Emitter.CreateMessage<EcsUiDropEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = gameObject;

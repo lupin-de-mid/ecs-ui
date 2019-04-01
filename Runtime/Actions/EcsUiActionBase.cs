@@ -33,6 +33,9 @@ namespace Leopotam.Ecs.Ui.Actions {
         [SerializeField]
         EcsUiActionNameRegistrationType _nameRegistrationType = EcsUiActionNameRegistrationType.None;
 
+        [SerializeField]
+        UnityEngine.UI.Selectable _selectable;
+
         void Awake () {
             if (_nameRegistrationType == EcsUiActionNameRegistrationType.OnAwake) {
                 ValidateEmitter ();
@@ -67,6 +70,10 @@ namespace Leopotam.Ecs.Ui.Actions {
             if (Emitter) {
                 Emitter.SetNamedObject (WidgetName, state ? gameObject : null);
             }
+        }
+
+        protected bool IsValidForEvent () {
+            return (object) Emitter != null && ((object) _selectable == null || _selectable.interactable);
         }
 
         /// <summary>
