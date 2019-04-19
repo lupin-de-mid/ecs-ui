@@ -22,19 +22,19 @@ namespace Leopotam.Ecs.Ui.Actions {
         /// Logical name for filtering widgets.
         /// </summary>
         [SerializeField]
-        protected string WidgetName;
+        protected string WidgetName = null;
 
         /// <summary>
         /// Ecs entities emitter.
         /// </summary>
         [SerializeField]
-        protected EcsUiEmitter Emitter;
+        protected EcsUiEmitter Emitter = null;
 
         [SerializeField]
         EcsUiActionNameRegistrationType _nameRegistrationType = EcsUiActionNameRegistrationType.None;
 
         [SerializeField]
-        UnityEngine.UI.Selectable _selectable;
+        UnityEngine.UI.Selectable _selectable = null;
 
         void Awake () {
             if (_nameRegistrationType == EcsUiActionNameRegistrationType.OnAwake) {
