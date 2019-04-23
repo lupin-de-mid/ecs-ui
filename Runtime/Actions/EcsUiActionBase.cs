@@ -22,16 +22,19 @@ namespace Leopotam.Ecs.Ui.Actions {
         /// Logical name for filtering widgets.
         /// </summary>
         [SerializeField]
-        protected string WidgetName;
+        protected string WidgetName = null;
 
         /// <summary>
         /// Ecs entities emitter.
         /// </summary>
         [SerializeField]
-        protected EcsUiEmitter Emitter;
+        protected EcsUiEmitter Emitter = null;
 
         [SerializeField]
         EcsUiActionNameRegistrationType _nameRegistrationType = EcsUiActionNameRegistrationType.None;
+
+        [SerializeField]
+        UnityEngine.UI.Selectable _selectable = null;
 
         void Awake () {
             if (_nameRegistrationType == EcsUiActionNameRegistrationType.OnAwake) {
@@ -67,6 +70,10 @@ namespace Leopotam.Ecs.Ui.Actions {
             if (Emitter) {
                 Emitter.SetNamedObject (WidgetName, state ? gameObject : null);
             }
+        }
+
+        protected bool IsValidForEvent () {
+            return (object) Emitter != null && ((object) _selectable == null || _selectable.interactable);
         }
 
         /// <summary>
