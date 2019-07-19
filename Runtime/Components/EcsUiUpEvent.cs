@@ -14,6 +14,7 @@ namespace Leopotam.Ecs.Ui.Components {
         public string WidgetName;
         public GameObject Sender;
         public Vector2 Position;
+        public int PointerId;
         public PointerEventData.InputButton Button;
 
         void IEcsAutoResetComponent.Reset () {
