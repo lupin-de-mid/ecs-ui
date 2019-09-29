@@ -8,13 +8,12 @@
 using UnityEngine.UI;
 
 namespace Leopotam.Ecs.Ui.Components {
-    [EcsOneFrame]
-    public sealed class EcsUiInputChangeEvent : IEcsAutoResetComponent {
+    public sealed class EcsUiInputChangeEvent : IEcsAutoReset, IEcsOneFrame {
         public string WidgetName;
         public InputField Sender;
         public string Value;
 
-        void IEcsAutoResetComponent.Reset () {
+        void IEcsAutoReset.Reset () {
             Sender = null;
         }
     }

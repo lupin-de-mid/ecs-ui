@@ -9,13 +9,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Leopotam.Ecs.Ui.Components {
-    [EcsOneFrame]
-    public sealed class EcsUiScrollViewEvent : IEcsAutoResetComponent {
+    public sealed class EcsUiScrollViewEvent : IEcsAutoReset, IEcsOneFrame {
         public string WidgetName;
         public ScrollRect Sender;
         public Vector2 Value;
 
-        void IEcsAutoResetComponent.Reset () {
+        void IEcsAutoReset.Reset () {
             Sender = null;
         }
     }
