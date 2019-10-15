@@ -59,7 +59,7 @@ public class TestUiClickEventSystem : IEcsRunSystem {
 
     void IEcsRunSystem.Run () {
         foreach (var i in _clickEvents) {
-            EcsUiClickEvent data = _clickEvents.Components1[i];
+            EcsUiClickEvent data = _clickEvents.Get1[i];
             Debug.Log ("Im clicked!", data.Sender);
         }
     }
