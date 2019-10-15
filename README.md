@@ -40,7 +40,7 @@ public class Startup : MonoBehaviour {
         _systems = new EcsSystems(world)
             .Add (_uiEmitter);
             // Additional initialization here...
-        _systems.Initialize ();
+        _systems.Init ();
     }
 }
 ```
@@ -58,8 +58,8 @@ public class TestUiClickEventSystem : IEcsRunSystem {
     EcsFilter<EcsUiClickEvent> _clickEvents = null;
 
     void IEcsRunSystem.Run () {
-        for (var i = 0; i < _clickEvents.EntitiesCount; i++) {
-            EcsUiClickEvent data = _clickEvents.Components1[i];
+        foreach (var i in _clickEvents) {
+            EcsUiClickEvent data = _clickEvents.Get1[i];
             Debug.Log ("Im clicked!", data.Sender);
         }
     }
@@ -72,18 +72,18 @@ public class Startup : MonoBehaviour {
     // Field that should be initialized by instance of `EcsUiEmitter` assigned to Ui root GameObject.
     [SerializeField]
     EcsUiEmitter _uiEmitter;
-
+    EcsWorld _world;
     EcsSystems _systems;
 
     IEnumerator Start () {
         // For correct registering named widgets at EcsUiEmitter.
         yield return null;
-        var world = new EcsWorld ();
-        _systems = new EcsSystems(world);
+        _world = new EcsWorld ();
+        _systems = new EcsSystems(_world);
         _systems
             .Add (_uiEmitter)
             // Additional systems here...
-            .Initialize ();
+            .Init ();
     }
 
     void Update () {
@@ -91,14 +91,14 @@ public class Startup : MonoBehaviour {
             // Process systems.
             _systems.Run();
             // Important: automatic clearing one-frame components (ui-events).
-            _world.RemoveOneFrameComponents ();
+            _world.EndFrame ();
         }
     }
 
     void OnDisable () {
-        _systems.Dispose ();
+        _systems.Destroy ();
         _systems = null;
-        _world.Dispose ();
+        _world.Destroy ();
         _world = null;
     }
 }
