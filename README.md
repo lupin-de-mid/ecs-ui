@@ -3,7 +3,7 @@
 # Unity uGui extension for Entity Component System framework
 Easy bindings for events from Unity uGui to [ECS framework](https://github.com/Leopotam/ecs) - main goal of this extension.
 
-> Tested on unity 2018.3 (dependent on Unity engine) and contains assembly definition for compiling to separate assembly file for performance reason.
+> Tested on unity 2019.1 (dependent on Unity engine) and contains assembly definition for compiling to separate assembly file for performance reason.
 
 > Dependent on [ECS framework](https://github.com/Leopotam/ecs) - ECS framework should be imported to unity project first.
 
@@ -35,9 +35,11 @@ public class Startup : MonoBehaviour {
 
     EcsSystems _systems;
 
-    void Start () {
+    IEnumerator Start () {
+        // For correct registering named widgets at EcsUiEmitter.
+        yield return null;
         var world = new EcsWorld ();
-        _systems = new EcsSystems(world)
+        _systems = new EcsSystems (world)
             .Add (_uiEmitter);
             // Additional initialization here...
         _systems.Init ();
@@ -53,8 +55,8 @@ Event data containers: `EcsUiClickEvent`, `EcsUiBeginDragEvent`, `EcsUiEndDragEv
 ```csharp
 [EcsInject]
 public class TestUiClickEventSystem : IEcsRunSystem {
+    // auto-injected fields.
     EcsWorld _world = null;
-
     EcsFilter<EcsUiClickEvent> _clickEvents = null;
 
     void IEcsRunSystem.Run () {
@@ -72,6 +74,8 @@ public class Startup : MonoBehaviour {
     // Field that should be initialized by instance of `EcsUiEmitter` assigned to Ui root GameObject.
     [SerializeField]
     EcsUiEmitter _uiEmitter;
+
+    // auto-injected fields.
     EcsWorld _world;
     EcsSystems _systems;
 
@@ -79,7 +83,7 @@ public class Startup : MonoBehaviour {
         // For correct registering named widgets at EcsUiEmitter.
         yield return null;
         _world = new EcsWorld ();
-        _systems = new EcsSystems(_world);
+        _systems = new EcsSystems (_world);
         _systems
             .Add (_uiEmitter)
             // Additional systems here...
@@ -89,7 +93,7 @@ public class Startup : MonoBehaviour {
     void Update () {
         if (_systems != null) {
             // Process systems.
-            _systems.Run();
+            _systems.Run ();
             // Important: automatic clearing one-frame components (ui-events).
             _world.EndFrame ();
         }
