@@ -75,8 +75,9 @@ public class Startup : MonoBehaviour {
     EcsWorld _world;
     EcsSystems _systems;
 
-    // Choose `OnAwake` initialization type in the EcsUiAction settings
-    void Start () {
+    IEnumerator Start () {
+        // For correct registering named widgets at EcsUiEmitter.
+        yield return null;
         _world = new EcsWorld ();
         _systems = new EcsSystems(_world);
         _systems
