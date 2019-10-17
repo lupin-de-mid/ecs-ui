@@ -25,43 +25,39 @@ namespace Leopotam.Ecs.Ui.Systems {
         /// <summary>
         /// Injects named UI objects.
         /// </summary>
-        public static EcsSystems InjectUiNamed (this EcsSystems ecsSystems, EcsUiEmitter emitter) {
-            var systems = ecsSystems.GetAllSystems ();
-            for (int i = 0, iMax = systems.Count; i < iMax; i++) {
-                InjectToSystem (systems.Items[i], emitter);
-            }
-            return ecsSystems;
-        }
-
-        static void InjectToSystem (IEcsSystem system, EcsUiEmitter emitter) {
-            var systemType = system.GetType ();
+        public static EcsSystems InjectUiNamed (this EcsSystems ecsSystems, EcsUiEmitter emitter, bool skipNoExists = false) {
             var uiNamedType = typeof (EcsUiNamedAttribute);
             var goType = typeof (GameObject);
             var componentType = typeof (Component);
-
-            foreach (var f in systemType.GetFields (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
-                // skip statics or fields without [EcsUiNamed] attribute.
-                if (f.IsStatic || !Attribute.IsDefined (f, uiNamedType)) {
-                    continue;
-                }
-                var name = ((EcsUiNamedAttribute) Attribute.GetCustomAttribute (f, uiNamedType)).Name;
+            var systems = ecsSystems.GetAllSystems ();
+            for (int i = 0, iMax = systems.Count; i < iMax; i++) {
+                var system = systems.Items[i];
+                var systemType = system.GetType ();
+                foreach (var f in systemType.GetFields (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
+                    // skip statics or fields without [EcsUiNamed] attribute.
+                    if (f.IsStatic || !Attribute.IsDefined (f, uiNamedType)) {
+                        continue;
+                    }
+                    var name = ((EcsUiNamedAttribute) Attribute.GetCustomAttribute (f, uiNamedType)).Name;
 #if DEBUG
-                if (string.IsNullOrEmpty (name)) { throw new Exception ($"Cant Inject field \"{f.Name}\" at \"{systemType}\" due to [EcsUiNamed] \"Name\" parameter is invalid"); }
-                if (!(f.FieldType == goType || componentType.IsAssignableFrom (f.FieldType))) { throw new Exception ($"Cant Inject field \"{f.Name}\" at \"{systemType}\" due to [EcsUiNamed] attribute can be applied only to GameObject or Component type"); }
+                    if (string.IsNullOrEmpty (name)) { throw new Exception ($"Cant Inject field \"{f.Name}\" at \"{systemType}\" due to [EcsUiNamed] \"Name\" parameter is invalid."); }
+                    if (!(f.FieldType == goType || componentType.IsAssignableFrom (f.FieldType))) { throw new Exception ($"Cant Inject field \"{f.Name}\" at \"{systemType}\" due to [EcsUiNamed] attribute can be applied only to GameObject or Component type."); }
+                    if (!skipNoExists && !emitter.GetNamedObject (name)) { throw new Exception ($"Cant Inject field \"{f.Name}\" at \"{systemType}\" due to there is no UI action with name \"{name}\"."); }
 #endif
-                var go = emitter.GetNamedObject (name);
-
-                // GameObject.
-                if (f.FieldType == goType) {
-                    f.SetValue (system, go);
-                    continue;
-                }
-                // Component.
-                if (componentType.IsAssignableFrom (f.FieldType)) {
-                    f.SetValue (system, go.GetComponent (f.FieldType));
-                    continue;
+                    var go = emitter.GetNamedObject (name);
+                    // GameObject.
+                    if (f.FieldType == goType) {
+                        f.SetValue (system, go);
+                        continue;
+                    }
+                    // Component.
+                    if (componentType.IsAssignableFrom (f.FieldType)) {
+                        f.SetValue (system, go != null ? go.GetComponent (f.FieldType) : null);
+                        continue;
+                    }
                 }
             }
+            return ecsSystems;
         }
     }
 }
