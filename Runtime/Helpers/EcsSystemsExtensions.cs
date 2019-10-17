@@ -23,9 +23,13 @@ namespace Leopotam.Ecs.Ui.Systems {
 
     public static class EcsSystemsExtensions {
         /// <summary>
-        /// Injects named UI objects.
+        /// Injects named UI objects and Emitter to all systems added to EcsSystems.
         /// </summary>
-        public static EcsSystems InjectUiNamed (this EcsSystems ecsSystems, EcsUiEmitter emitter, bool skipNoExists = false) {
+        /// <param name="emitter">EcsUiEmitter instance.</param>
+        /// <param name="skipNoExists">Not throw exception if named action not registered in emitter.</param>
+        public static EcsSystems InjectUi (this EcsSystems ecsSystems, EcsUiEmitter emitter, bool skipNoExists = false) {
+            ecsSystems.Inject (emitter);
+            emitter._world = ecsSystems.World;
             var uiNamedType = typeof (EcsUiNamedAttribute);
             var goType = typeof (GameObject);
             var componentType = typeof (Component);

@@ -14,7 +14,7 @@ namespace Leopotam.Ecs.Ui.Systems {
     /// Emitter system for uGui events to ECS world.
     /// </summary>
     public class EcsUiEmitter : MonoBehaviour, IEcsRunSystem {
-        EcsWorld _world = null;
+        internal EcsWorld _world = null;
         readonly Dictionary<int, GameObject> _actions = new Dictionary<int, GameObject> (64);
 
         /// <summary>
@@ -59,14 +59,17 @@ namespace Leopotam.Ecs.Ui.Systems {
             return retVal;
         }
 
-        // This type of system requires for automatic calls of EcsWorld.ProcessDelayedUpdates().
-        void IEcsRunSystem.Run () { }
+        void IEcsRunSystem.Run () {
+#if DEBUG
+            Debug.LogWarning ("[EcsUiEmitter] Obsoleted behaviour - no need to add EcsEmitter to EcsSystems.");
+#endif
+        }
 
         [System.Diagnostics.Conditional ("DEBUG")]
         void ValidateEcsFields () {
 #if DEBUG
             if (_world == null) {
-                throw new System.Exception ("[EcsUiEmitter] Register this system to EcsSystems first.");
+                throw new System.Exception ("[EcsUiEmitter] Call EcsSystems.InjectUi() first.");
             }
 #endif
         }

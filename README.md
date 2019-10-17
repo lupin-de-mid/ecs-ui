@@ -26,12 +26,12 @@ If you can't / don't want to use unity modules, code can be downloaded as source
 
 ## EcsUiEmitter
 
-Ecs run-system that generates entities with events data to `ecs world`. Should be placed on root GameObject of Ui hierarchy in scene and connected in `ecs world` before any systems that should process events from ui:
+Ecs run-system that generates entities with events data to `ecs world`. Should be placed on root GameObject of Ui hierarchy in scene (on root Canvas, for example) and connected in `ecs world` before any systems that should process events from ui:
 ```csharp
 public class Startup : MonoBehaviour {
     // Field that should be initialized by instance of `EcsUiEmitter` assigned to Ui root GameObject.
     [SerializeField]
-    EcsUiEmitter _uiEmitter;
+    EcsUiEmitter _uiEmitter = null;
 
     EcsSystems _systems;
 
@@ -40,26 +40,44 @@ public class Startup : MonoBehaviour {
         yield return null;
         var world = new EcsWorld ();
         _systems = new EcsSystems (world)
-            .Add (_uiEmitter);
-            // Additional initialization here...
+            // Additional systems here...
+            .Add (new TestSystem ())
+            .InjectUi (_uiEmitter);
         _systems.Init ();
     }
 }
+
+public class TestSystem : IEcsInitSystem {
+    // auto-injected fields.
+    EcsUiEmitter _ui = null;
+    [EcsUiNamed("MyButton")] GameObject _btnGo;
+    [EcsUiNamed("MyButton")] Transform _btnTransform;
+    [EcsUiNamed("MyButton")] Button _btn;
+
+    public void Init () {
+        // All fields above will be filled and can be used here.
+        // Results of injection:
+        // _ui = instance of injected EcsUiEmitter.
+        // _btnGo = _ui.GetNamedObject ("MyButton");
+        // _btnTransform = _ui.GetNamedObject ("MyButton").GetComponent<Transform> ();
+        // _btn = _ui.GetNamedObject ("MyButton").GetComponent<Button> ();
+    }
+}
 ```
+> No need to inject `EcsUiEmitter` instance through `EcsSystems.Inject` if you call `EcsSystems.InjectUi` already.
 
 # Actions
-MonoBehaviour components that should be added to uGui widgets to transfer events from them to `ecs-world` (`EcsUiClickAction`, `EcsUiDragAction` and others). Each action component contains reference to `EcsUiEmitter` in scene (if not inited - will try to find emitter automatically) and logical name `WidgetName` that can helps to detect source of event inside ecs-system.
+MonoBehaviour components that should be added to uGui widgets to transfer events from them to `ecs-world` (`EcsUiClickAction`, `EcsUiDragAction` and others). Each action component contains reference to `EcsUiEmitter` in scene (if not inited - will try to find emitter automatically) and logical name `WidgetName` that can helps to detect source of event (or just get named `GameObject`) inside ecs-system.
 
 # Components
 Event data containers: `EcsUiClickEvent`, `EcsUiBeginDragEvent`, `EcsUiEndDragEvent` and others - they can be used as ecs-components with standard filtering through `EcsFilter`:
 ```csharp
-[EcsInject]
 public class TestUiClickEventSystem : IEcsRunSystem {
     // auto-injected fields.
     EcsWorld _world = null;
     EcsFilter<EcsUiClickEvent> _clickEvents = null;
 
-    void IEcsRunSystem.Run () {
+    public void Run () {
         foreach (var i in _clickEvents) {
             EcsUiClickEvent data = _clickEvents.Get1[i];
             Debug.Log ("Im clicked!", data.Sender);
@@ -73,9 +91,8 @@ public class TestUiClickEventSystem : IEcsRunSystem {
 public class Startup : MonoBehaviour {
     // Field that should be initialized by instance of `EcsUiEmitter` assigned to Ui root GameObject.
     [SerializeField]
-    EcsUiEmitter _uiEmitter;
+    EcsUiEmitter _uiEmitter = null;
 
-    // auto-injected fields.
     EcsWorld _world;
     EcsSystems _systems;
 
@@ -85,8 +102,8 @@ public class Startup : MonoBehaviour {
         _world = new EcsWorld ();
         _systems = new EcsSystems (_world);
         _systems
-            .Add (_uiEmitter)
             // Additional systems here...
+            .InjectUi (_uiEmitter)
             .Init ();
     }
 
