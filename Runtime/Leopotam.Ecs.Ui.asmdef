@@ -1,7 +1,8 @@
 {
     "name": "Leopotam.Ecs.Ui",
     "references": [
-        "Leopotam.Ecs"
+        "Leopotam.Ecs",
+        "Unity.TextMeshPro"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
