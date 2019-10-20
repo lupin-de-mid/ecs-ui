@@ -5,6 +5,7 @@
 // Copyright (c) 2017-2019 Leopotam <leopotam@gmail.com>
 // ----------------------------------------------------------------------------
 
+using System;
 using Leopotam.Ecs.Ui.Components;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ namespace Leopotam.Ecs.Ui.Actions {
     /// <summary>
     /// Ui action for processing InputField events.
     /// </summary>
+    [Obsolete ("Use TextMeshPro alternative instead")]
     [RequireComponent (typeof (InputField))]
     public sealed class EcsUiInputAction : EcsUiActionBase {
         InputField _input;

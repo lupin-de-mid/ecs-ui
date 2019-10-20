@@ -8,7 +8,6 @@
 using Leopotam.Ecs.Ui.Components;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Leopotam.Ecs.Ui.Actions {
     /// <summary>

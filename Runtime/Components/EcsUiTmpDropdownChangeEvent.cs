@@ -5,15 +5,13 @@
 // Copyright (c) 2017-2019 Leopotam <leopotam@gmail.com>
 // ----------------------------------------------------------------------------
 
-using System;
-using UnityEngine.UI;
+using TMPro;
 
 namespace Leopotam.Ecs.Ui.Components {
-    [Obsolete ("Use TextMeshPro alternative instead")]
-    public sealed class EcsUiInputEndEvent : IEcsAutoReset, IEcsOneFrame {
+    public sealed class EcsUiTmpDropdownChangeEvent : IEcsAutoReset, IEcsOneFrame {
         public string WidgetName;
-        public InputField Sender;
-        public string Value;
+        public TMP_Dropdown Sender;
+        public int Value;
 
         void IEcsAutoReset.Reset () {
             Sender = null;
