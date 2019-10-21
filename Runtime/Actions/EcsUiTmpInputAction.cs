@@ -5,29 +5,27 @@
 // Copyright (c) 2017-2019 Leopotam <leopotam@gmail.com>
 // ----------------------------------------------------------------------------
 
-using System;
 using Leopotam.Ecs.Ui.Components;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Leopotam.Ecs.Ui.Actions {
     /// <summary>
     /// Ui action for processing InputField events.
     /// </summary>
-    [Obsolete ("Use TextMeshPro alternative instead")]
-    [RequireComponent (typeof (InputField))]
-    public sealed class EcsUiInputAction : EcsUiActionBase {
-        InputField _input;
+    [RequireComponent (typeof (TMP_InputField))]
+    public sealed class EcsUiTmpInputAction : EcsUiActionBase {
+        TMP_InputField _input;
 
         void Awake () {
-            _input = GetComponent<InputField> ();
+            _input = GetComponent<TMP_InputField> ();
             _input.onValueChanged.AddListener (OnInputValueChanged);
             _input.onEndEdit.AddListener (OnInputEnded);
         }
 
         void OnInputValueChanged (string value) {
             if (IsValidForEvent ()) {
-                var msg = Emitter.CreateMessage<EcsUiInputChangeEvent> ();
+                var msg = Emitter.CreateMessage<EcsUiTmpInputChangeEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = _input;
                 msg.Value = value;
@@ -36,7 +34,7 @@ namespace Leopotam.Ecs.Ui.Actions {
 
         void OnInputEnded (string value) {
             if (IsValidForEvent ()) {
-                var msg = Emitter.CreateMessage<EcsUiInputEndEvent> ();
+                var msg = Emitter.CreateMessage<EcsUiTmpInputEndEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = _input;
                 msg.Value = value;

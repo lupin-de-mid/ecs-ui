@@ -5,14 +5,13 @@
 // Copyright (c) 2017-2019 Leopotam <leopotam@gmail.com>
 // ----------------------------------------------------------------------------
 
-using UnityEngine;
-using UnityEngine.EventSystems;
+using TMPro;
 
 namespace Leopotam.Ecs.Ui.Components {
-    public sealed class EcsUiDropEvent : IEcsAutoReset, IEcsOneFrame {
+    public sealed class EcsUiTmpDropdownChangeEvent : IEcsAutoReset, IEcsOneFrame {
         public string WidgetName;
-        public GameObject Sender;
-        public PointerEventData.InputButton Button;
+        public TMP_Dropdown Sender;
+        public int Value;
 
         void IEcsAutoReset.Reset () {
             Sender = null;

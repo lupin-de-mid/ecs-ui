@@ -5,16 +5,17 @@
 // Copyright (c) 2017-2019 Leopotam <leopotam@gmail.com>
 // ----------------------------------------------------------------------------
 
+using System;
 using UnityEngine.UI;
 
 namespace Leopotam.Ecs.Ui.Components {
-    [EcsOneFrame]
-    public sealed class EcsUiInputEndEvent : IEcsAutoResetComponent {
+    [Obsolete ("Use TextMeshPro alternative instead")]
+    public sealed class EcsUiInputEndEvent : IEcsAutoReset, IEcsOneFrame {
         public string WidgetName;
         public InputField Sender;
         public string Value;
 
-        void IEcsAutoResetComponent.Reset () {
+        void IEcsAutoReset.Reset () {
             Sender = null;
         }
     }

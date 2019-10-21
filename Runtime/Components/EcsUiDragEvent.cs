@@ -9,8 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Leopotam.Ecs.Ui.Components {
-    [EcsOneFrame]
-    public sealed class EcsUiDragEvent : IEcsAutoResetComponent {
+    public sealed class EcsUiDragEvent : IEcsAutoReset, IEcsOneFrame {
         public string WidgetName;
         public GameObject Sender;
         public Vector2 Position;
@@ -18,7 +17,7 @@ namespace Leopotam.Ecs.Ui.Components {
         public Vector2 Delta;
         public PointerEventData.InputButton Button;
 
-        void IEcsAutoResetComponent.Reset () {
+        void IEcsAutoReset.Reset () {
             Sender = null;
         }
     }

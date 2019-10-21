@@ -3,7 +3,7 @@
 # Unity uGui extension for Entity Component System framework
 Easy bindings for events from Unity uGui to [ECS framework](https://github.com/Leopotam/ecs) - main goal of this extension.
 
-> Tested on unity 2018.3 (dependent on Unity engine) and contains assembly definition for compiling to separate assembly file for performance reason.
+> Tested on unity 2019.1 (dependent on Unity engine) and contains assembly definition for compiling to separate assembly file for performance reason.
 
 > Dependent on [ECS framework](https://github.com/Leopotam/ecs) - ECS framework should be imported to unity project first.
 
@@ -19,6 +19,22 @@ By default last released version will be used. If you need trunk / developing ve
 "com.leopotam.ecs-ui": "https://github.com/Leopotam/ecs-ui.git#develop",
 ```
 
+## As unity module from npm registry (Experimental)
+This repository can be installed as unity module from external npm registry with support of different versions. In this way new block should be added to `Packages/manifest.json` right after opening `{` bracket:
+```json
+  "scopedRegistries": [
+    {
+      "name": "Leopotam",
+      "url": "https://npm.leopotam.com",
+      "scopes": [
+        "com.leopotam"
+      ]
+    }
+  ],
+```
+After this operation registry can be installed from list of packages from standard unity module manager.
+> **Important!** Url can be changed later, check actual url at `README`.
+
 ## As source
 If you can't / don't want to use unity modules, code can be downloaded as sources archive of required release from [Releases page](`https://github.com/Leopotam/ecs-ui/releases`).
 
@@ -26,40 +42,60 @@ If you can't / don't want to use unity modules, code can be downloaded as source
 
 ## EcsUiEmitter
 
-Ecs run-system that generates entities with events data to `ecs world`. Should be placed on root GameObject of Ui hierarchy in scene and connected in `ecs world` before any systems that should process events from ui:
+Ecs run-system that generates entities with events data to `ecs world`. Should be placed on root GameObject of Ui hierarchy in scene (on root Canvas, for example) and connected in `ecs world` before any systems that should process events from ui:
 ```csharp
 public class Startup : MonoBehaviour {
     // Field that should be initialized by instance of `EcsUiEmitter` assigned to Ui root GameObject.
     [SerializeField]
-    EcsUiEmitter _uiEmitter;
+    EcsUiEmitter _uiEmitter = null;
 
     EcsSystems _systems;
 
-    void Start () {
+    IEnumerator Start () {
+        // For correct registering named widgets at EcsUiEmitter.
+        yield return null;
         var world = new EcsWorld ();
-        _systems = new EcsSystems(world)
-            .Add (_uiEmitter);
-            // Additional initialization here...
-        _systems.Initialize ();
+        _systems = new EcsSystems (world)
+            // Additional systems here...
+            .Add (new TestSystem ())
+            .InjectUi (_uiEmitter);
+        _systems.Init ();
+    }
+}
+
+public class TestSystem : IEcsInitSystem {
+    // auto-injected fields.
+    EcsUiEmitter _ui = null;
+    [EcsUiNamed("MyButton")] GameObject _btnGo;
+    [EcsUiNamed("MyButton")] Transform _btnTransform;
+    [EcsUiNamed("MyButton")] Button _btn;
+
+    public void Init () {
+        // All fields above will be filled and can be used here.
+        // Results of injection:
+        // _ui = instance of injected EcsUiEmitter.
+        // _btnGo = _ui.GetNamedObject ("MyButton");
+        // _btnTransform = _ui.GetNamedObject ("MyButton").GetComponent<Transform> ();
+        // _btn = _ui.GetNamedObject ("MyButton").GetComponent<Button> ();
     }
 }
 ```
+> No need to inject `EcsUiEmitter` instance through `EcsSystems.Inject` if you call `EcsSystems.InjectUi` already.
 
 # Actions
-MonoBehaviour components that should be added to uGui widgets to transfer events from them to `ecs-world` (`EcsUiClickAction`, `EcsUiDragAction` and others). Each action component contains reference to `EcsUiEmitter` in scene (if not inited - will try to find emitter automatically) and logical name `WidgetName` that can helps to detect source of event inside ecs-system.
+MonoBehaviour components that should be added to uGui widgets to transfer events from them to `ecs-world` (`EcsUiClickAction`, `EcsUiDragAction` and others). Each action component contains reference to `EcsUiEmitter` in scene (if not inited - will try to find emitter automatically) and logical name `WidgetName` that can helps to detect source of event (or just get named `GameObject`) inside ecs-system.
 
 # Components
 Event data containers: `EcsUiClickEvent`, `EcsUiBeginDragEvent`, `EcsUiEndDragEvent` and others - they can be used as ecs-components with standard filtering through `EcsFilter`:
 ```csharp
-[EcsInject]
 public class TestUiClickEventSystem : IEcsRunSystem {
+    // auto-injected fields.
     EcsWorld _world = null;
-
     EcsFilter<EcsUiClickEvent> _clickEvents = null;
 
-    void IEcsRunSystem.Run () {
-        for (var i = 0; i < _clickEvents.EntitiesCount; i++) {
-            EcsUiClickEvent data = _clickEvents.Components1[i];
+    public void Run () {
+        foreach (var i in _clickEvents) {
+            EcsUiClickEvent data = _clickEvents.Get1[i];
             Debug.Log ("Im clicked!", data.Sender);
         }
     }
@@ -71,34 +107,35 @@ public class TestUiClickEventSystem : IEcsRunSystem {
 public class Startup : MonoBehaviour {
     // Field that should be initialized by instance of `EcsUiEmitter` assigned to Ui root GameObject.
     [SerializeField]
-    EcsUiEmitter _uiEmitter;
+    EcsUiEmitter _uiEmitter = null;
 
+    EcsWorld _world;
     EcsSystems _systems;
 
     IEnumerator Start () {
         // For correct registering named widgets at EcsUiEmitter.
         yield return null;
-        var world = new EcsWorld ();
-        _systems = new EcsSystems(world);
+        _world = new EcsWorld ();
+        _systems = new EcsSystems (_world);
         _systems
-            .Add (_uiEmitter)
             // Additional systems here...
-            .Initialize ();
+            .InjectUi (_uiEmitter)
+            .Init ();
     }
 
     void Update () {
         if (_systems != null) {
             // Process systems.
-            _systems.Run();
+            _systems.Run ();
             // Important: automatic clearing one-frame components (ui-events).
-            _world.RemoveOneFrameComponents ();
+            _world.EndFrame ();
         }
     }
 
     void OnDisable () {
-        _systems.Dispose ();
+        _systems.Destroy ();
         _systems = null;
-        _world.Dispose ();
+        _world.Destroy ();
         _world = null;
     }
 }
