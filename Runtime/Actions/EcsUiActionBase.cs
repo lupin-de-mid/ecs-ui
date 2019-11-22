@@ -14,6 +14,7 @@ namespace Leopotam.Ecs.Ui.Actions {
         OnAwake,
         OnStart
     }
+
     /// <summary>
     /// Base class for ui action.
     /// </summary>
@@ -21,20 +22,16 @@ namespace Leopotam.Ecs.Ui.Actions {
         /// <summary>
         /// Logical name for filtering widgets.
         /// </summary>
-        [SerializeField]
-        protected string WidgetName = null;
+        [SerializeField] protected string WidgetName = null;
 
         /// <summary>
         /// Ecs entities emitter.
         /// </summary>
-        [SerializeField]
-        protected EcsUiEmitter Emitter = null;
+        [SerializeField] protected EcsUiEmitter Emitter = null;
 
-        [SerializeField]
-        EcsUiActionNameRegistrationType _nameRegistrationType = EcsUiActionNameRegistrationType.None;
+        [SerializeField] EcsUiActionNameRegistrationType _nameRegistrationType = EcsUiActionNameRegistrationType.None;
 
-        [SerializeField]
-        UnityEngine.UI.Selectable _selectable = null;
+        [SerializeField] UnityEngine.UI.Selectable _selectable = null;
 
         void Awake () {
             if (_nameRegistrationType == EcsUiActionNameRegistrationType.OnAwake) {
@@ -55,11 +52,11 @@ namespace Leopotam.Ecs.Ui.Actions {
         }
 
         void ValidateEmitter () {
-            if ((object) Emitter == null) {
+            if (Emitter == null) {
                 Emitter = GetComponentInParent<EcsUiEmitter> ();
             }
 #if DEBUG
-            if ((object) Emitter == null) {
+            if (Emitter == null) {
                 Debug.LogError ("EcsUiEmitter not found in hierarchy", this);
             }
 #endif
@@ -73,7 +70,7 @@ namespace Leopotam.Ecs.Ui.Actions {
         }
 
         protected bool IsValidForEvent () {
-            return (object) Emitter != null && ((object) _selectable == null || _selectable.interactable);
+            return (object) Emitter != null && (_selectable == null || _selectable.interactable);
         }
 
         /// <summary>

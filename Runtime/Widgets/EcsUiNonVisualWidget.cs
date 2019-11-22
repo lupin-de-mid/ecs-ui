@@ -15,9 +15,9 @@ namespace Leopotam.Ecs.Ui.Widgets {
     [RequireComponent (typeof (CanvasRenderer))]
     [RequireComponent (typeof (RectTransform))]
     public class EcsUiNonVisualWidget : Graphic {
-        public override void SetMaterialDirty () { return; }
-        public override void SetVerticesDirty () { return; }
+        public override void SetMaterialDirty () { }
+        public override void SetVerticesDirty () { }
         public override Material material { get { return defaultMaterial; } set { } }
-        public override void Rebuild (CanvasUpdate update) { return; }
+        public override void Rebuild (CanvasUpdate update) { }
     }
 }

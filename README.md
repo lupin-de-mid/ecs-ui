@@ -21,7 +21,7 @@ By default last released version will be used. If you need trunk / developing ve
 
 ## As unity module from npm registry (Experimental)
 This repository can be installed as unity module from external npm registry with support of different versions. In this way new block should be added to `Packages/manifest.json` right after opening `{` bracket:
-```json
+```
   "scopedRegistries": [
     {
       "name": "Leopotam",
@@ -145,7 +145,7 @@ public class Startup : MonoBehaviour {
 [Examples repo](https://github.com/Leopotam/ecs-ui.examples.git).
 
 # License
-The software released under the terms of the [MIT license](./LICENSE). Enjoy.
+The software released under the terms of the [MIT license](./LICENSE.md). Enjoy.
 
 # Donate
 Its free opensource software, but you can buy me a coffee:
