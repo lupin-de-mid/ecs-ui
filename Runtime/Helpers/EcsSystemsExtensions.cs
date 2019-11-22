@@ -9,6 +9,7 @@ using System;
 using System.Reflection;
 using UnityEngine;
 
+// ReSharper disable once CheckNamespace
 namespace Leopotam.Ecs.Ui.Systems {
     /// <summary>
     /// Marks field of IEcsSystem class to be injected with named UI object.
@@ -25,11 +26,12 @@ namespace Leopotam.Ecs.Ui.Systems {
         /// <summary>
         /// Injects named UI objects and Emitter to all systems added to EcsSystems.
         /// </summary>
+        /// <param name="ecsSystems">EcsSystems group.</param>
         /// <param name="emitter">EcsUiEmitter instance.</param>
         /// <param name="skipNoExists">Not throw exception if named action not registered in emitter.</param>
         public static EcsSystems InjectUi (this EcsSystems ecsSystems, EcsUiEmitter emitter, bool skipNoExists = false) {
             ecsSystems.Inject (emitter);
-            emitter._world = ecsSystems.World;
+            emitter.World = ecsSystems.World;
             var uiNamedType = typeof (EcsUiNamedAttribute);
             var goType = typeof (GameObject);
             var componentType = typeof (Component);
@@ -57,7 +59,6 @@ namespace Leopotam.Ecs.Ui.Systems {
                     // Component.
                     if (componentType.IsAssignableFrom (f.FieldType)) {
                         f.SetValue (system, go != null ? go.GetComponent (f.FieldType) : null);
-                        continue;
                     }
                 }
             }

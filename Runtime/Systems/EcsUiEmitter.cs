@@ -14,7 +14,7 @@ namespace Leopotam.Ecs.Ui.Systems {
     /// Emitter system for uGui events to ECS world.
     /// </summary>
     public class EcsUiEmitter : MonoBehaviour, IEcsRunSystem {
-        internal EcsWorld _world = null;
+        internal EcsWorld World = null;
         readonly Dictionary<int, GameObject> _actions = new Dictionary<int, GameObject> (64);
 
         /// <summary>
@@ -22,24 +22,23 @@ namespace Leopotam.Ecs.Ui.Systems {
         /// </summary>
         public T CreateMessage<T> () where T : class, new () {
             ValidateEcsFields ();
-            T msg;
-            _world.NewEntityWith<T> (out msg);
+            World.NewEntityWith<T> (out var msg);
             return msg;
         }
 
         /// <summary>
         /// Sets link to named GameObject to use it later from code. If GameObject is null - unset named link.
         /// </summary>
-        /// <param name="name">Logical name.</param>
+        /// <param name="widgetName">Logical name.</param>
         /// <param name="go">GameObject link.</param>
-        public void SetNamedObject (string name, GameObject go) {
-            if (!string.IsNullOrEmpty (name)) {
-                var id = name.GetHashCode ();
+        public void SetNamedObject (string widgetName, GameObject go) {
+            if (!string.IsNullOrEmpty (widgetName)) {
+                var id = widgetName.GetHashCode ();
                 if (_actions.ContainsKey (id)) {
-                    if ((object) go == null) {
+                    if (!go) {
                         _actions.Remove (id);
                     } else {
-                        throw new Exception (string.Format ("Action with \"{0}\" name already registered", name));
+                        throw new Exception ($"Action with \"{widgetName}\" name already registered");
                     }
                 } else {
                     if ((object) go != null) {
@@ -52,10 +51,9 @@ namespace Leopotam.Ecs.Ui.Systems {
         /// <summary>
         /// Gets link to named GameObject to use it later from code.
         /// </summary>
-        /// <param name="name">Logical name.</param>
-        public GameObject GetNamedObject (string name) {
-            GameObject retVal;
-            _actions.TryGetValue (name.GetHashCode (), out retVal);
+        /// <param name="widgetName">Logical name.</param>
+        public GameObject GetNamedObject (string widgetName) {
+            _actions.TryGetValue (widgetName.GetHashCode (), out var retVal);
             return retVal;
         }
 
@@ -68,8 +66,8 @@ namespace Leopotam.Ecs.Ui.Systems {
         [System.Diagnostics.Conditional ("DEBUG")]
         void ValidateEcsFields () {
 #if DEBUG
-            if (_world == null) {
-                throw new System.Exception ("[EcsUiEmitter] Call EcsSystems.InjectUi() first.");
+            if (World == null) {
+                throw new Exception ("[EcsUiEmitter] Call EcsSystems.InjectUi() first.");
             }
 #endif
         }
