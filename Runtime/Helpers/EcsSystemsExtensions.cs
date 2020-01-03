@@ -2,14 +2,14 @@
 // The MIT License
 // Ui extension https://github.com/Leopotam/ecs-ui
 // for ECS framework https://github.com/Leopotam/ecs
-// Copyright (c) 2017-2019 Leopotam <leopotam@gmail.com>
+// Copyright (c) 2017-2020 Leopotam <leopotam@gmail.com>
 // ----------------------------------------------------------------------------
 
 using System;
 using System.Reflection;
+using Leopotam.Ecs.Ui.Components;
 using UnityEngine;
 
-// ReSharper disable once CheckNamespace
 namespace Leopotam.Ecs.Ui.Systems {
     /// <summary>
     /// Marks field of IEcsSystem class to be injected with named UI object.
