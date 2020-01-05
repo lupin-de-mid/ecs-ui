@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Leopotam.Ecs.Ui.Components {
-    public sealed class EcsUiUpEvent : IEcsAutoReset, IEcsOneFrame {
+    public sealed class EcsUiUpEvent : IEcsAutoReset {
         public string WidgetName;
         public GameObject Sender;
         public Vector2 Position;

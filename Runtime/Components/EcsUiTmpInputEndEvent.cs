@@ -8,7 +8,7 @@
 using TMPro;
 
 namespace Leopotam.Ecs.Ui.Components {
-    public sealed class EcsUiTmpInputEndEvent : IEcsAutoReset, IEcsOneFrame {
+    public sealed class EcsUiTmpInputEndEvent : IEcsAutoReset {
         public string WidgetName;
         public TMP_InputField Sender;
         public string Value;

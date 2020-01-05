@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Leopotam.Ecs.Ui.Components {
-    public sealed class EcsUiScrollViewEvent : IEcsAutoReset, IEcsOneFrame {
+    public sealed class EcsUiScrollViewEvent : IEcsAutoReset {
         public string WidgetName;
         public ScrollRect Sender;
         public Vector2 Value;

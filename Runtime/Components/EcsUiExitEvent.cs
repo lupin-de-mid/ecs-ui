@@ -8,7 +8,7 @@
 using UnityEngine;
 
 namespace Leopotam.Ecs.Ui.Components {
-    public sealed class EcsUiExitEvent : IEcsAutoReset, IEcsOneFrame {
+    public sealed class EcsUiExitEvent : IEcsAutoReset {
         public string WidgetName;
         public GameObject Sender;
 

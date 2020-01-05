@@ -8,7 +8,7 @@
 using UnityEngine.UI;
 
 namespace Leopotam.Ecs.Ui.Components {
-    public sealed class EcsUiSliderChangeEvent : IEcsAutoReset, IEcsOneFrame {
+    public sealed class EcsUiSliderChangeEvent : IEcsAutoReset {
         public string WidgetName;
         public Slider Sender;
         public float Value;

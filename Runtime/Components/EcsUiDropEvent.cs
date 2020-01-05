@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Leopotam.Ecs.Ui.Components {
-    public sealed class EcsUiDropEvent : IEcsAutoReset, IEcsOneFrame {
+    public sealed class EcsUiDropEvent : IEcsAutoReset {
         public string WidgetName;
         public GameObject Sender;
         public PointerEventData.InputButton Button;
