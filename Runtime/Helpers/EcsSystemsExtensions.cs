@@ -2,14 +2,14 @@
 // The MIT License
 // Ui extension https://github.com/Leopotam/ecs-ui
 // for ECS framework https://github.com/Leopotam/ecs
-// Copyright (c) 2017-2019 Leopotam <leopotam@gmail.com>
+// Copyright (c) 2017-2020 Leopotam <leopotam@gmail.com>
 // ----------------------------------------------------------------------------
 
 using System;
 using System.Reflection;
+using Leopotam.Ecs.Ui.Components;
 using UnityEngine;
 
-// ReSharper disable once CheckNamespace
 namespace Leopotam.Ecs.Ui.Systems {
     /// <summary>
     /// Marks field of IEcsSystem class to be injected with named UI object.
@@ -30,6 +30,7 @@ namespace Leopotam.Ecs.Ui.Systems {
         /// <param name="emitter">EcsUiEmitter instance.</param>
         /// <param name="skipNoExists">Not throw exception if named action not registered in emitter.</param>
         public static EcsSystems InjectUi (this EcsSystems ecsSystems, EcsUiEmitter emitter, bool skipNoExists = false) {
+            InjectOneFrames (ecsSystems);
             ecsSystems.Inject (emitter);
             emitter.World = ecsSystems.World;
             var uiNamedType = typeof (EcsUiNamedAttribute);
@@ -47,7 +48,9 @@ namespace Leopotam.Ecs.Ui.Systems {
                     var name = ((EcsUiNamedAttribute) Attribute.GetCustomAttribute (f, uiNamedType)).Name;
 #if DEBUG
                     if (string.IsNullOrEmpty (name)) { throw new Exception ($"Cant Inject field \"{f.Name}\" at \"{systemType}\" due to [EcsUiNamed] \"Name\" parameter is invalid."); }
-                    if (!(f.FieldType == goType || componentType.IsAssignableFrom (f.FieldType))) { throw new Exception ($"Cant Inject field \"{f.Name}\" at \"{systemType}\" due to [EcsUiNamed] attribute can be applied only to GameObject or Component type."); }
+                    if (!(f.FieldType == goType || componentType.IsAssignableFrom (f.FieldType))) {
+                        throw new Exception ($"Cant Inject field \"{f.Name}\" at \"{systemType}\" due to [EcsUiNamed] attribute can be applied only to GameObject or Component type.");
+                    }
                     if (!skipNoExists && !emitter.GetNamedObject (name)) { throw new Exception ($"Cant Inject field \"{f.Name}\" at \"{systemType}\" due to there is no UI action with name \"{name}\"."); }
 #endif
                     var go = emitter.GetNamedObject (name);
@@ -63,6 +66,23 @@ namespace Leopotam.Ecs.Ui.Systems {
                 }
             }
             return ecsSystems;
+        }
+
+        static void InjectOneFrames (EcsSystems ecsSystems) {
+            ecsSystems.OneFrame<EcsUiBeginDragEvent> ();
+            ecsSystems.OneFrame<EcsUiDragEvent> ();
+            ecsSystems.OneFrame<EcsUiEndDragEvent> ();
+            ecsSystems.OneFrame<EcsUiDropEvent> ();
+            ecsSystems.OneFrame<EcsUiClickEvent> ();
+            ecsSystems.OneFrame<EcsUiDownEvent> ();
+            ecsSystems.OneFrame<EcsUiUpEvent> ();
+            ecsSystems.OneFrame<EcsUiEnterEvent> ();
+            ecsSystems.OneFrame<EcsUiExitEvent> ();
+            ecsSystems.OneFrame<EcsUiScrollViewEvent> ();
+            ecsSystems.OneFrame<EcsUiSliderChangeEvent> ();
+            ecsSystems.OneFrame<EcsUiTmpDropdownChangeEvent> ();
+            ecsSystems.OneFrame<EcsUiTmpInputChangeEvent> ();
+            ecsSystems.OneFrame<EcsUiTmpInputEndEvent> ();
         }
     }
 }
