@@ -13,17 +13,16 @@ namespace Leopotam.Ecs.Ui.Systems {
     /// <summary>
     /// Emitter system for uGui events to ECS world.
     /// </summary>
-    public class EcsUiEmitter : MonoBehaviour, IEcsRunSystem {
+    public class EcsUiEmitter : MonoBehaviour {
         internal EcsWorld World = null;
         readonly Dictionary<int, GameObject> _actions = new Dictionary<int, GameObject> (64);
 
         /// <summary>
-        /// Creates ecs entity with T component on it.
+        /// Creates ecs entity for message.
         /// </summary>
-        public T CreateMessage<T> () where T : class, new () {
+        public EcsEntity CreateEntity () {
             ValidateEcsFields ();
-            World.NewEntityWith<T> (out var msg);
-            return msg;
+            return World.NewEntity ();
         }
 
         /// <summary>
@@ -55,12 +54,6 @@ namespace Leopotam.Ecs.Ui.Systems {
         public GameObject GetNamedObject (string widgetName) {
             _actions.TryGetValue (widgetName.GetHashCode (), out var retVal);
             return retVal;
-        }
-
-        void IEcsRunSystem.Run () {
-#if DEBUG
-            Debug.LogWarning ("[EcsUiEmitter] Obsoleted behaviour - no need to add EcsEmitter to EcsSystems.");
-#endif
         }
 
         [System.Diagnostics.Conditional ("DEBUG")]

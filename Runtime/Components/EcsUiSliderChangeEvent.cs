@@ -8,13 +8,9 @@
 using UnityEngine.UI;
 
 namespace Leopotam.Ecs.Ui.Components {
-    public sealed class EcsUiSliderChangeEvent : IEcsAutoReset {
+    public struct EcsUiSliderChangeEvent {
         public string WidgetName;
         public Slider Sender;
         public float Value;
-
-        void IEcsAutoReset.Reset () {
-            Sender = null;
-        }
     }
 }

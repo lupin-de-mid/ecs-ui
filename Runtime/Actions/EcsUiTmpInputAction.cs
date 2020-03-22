@@ -25,7 +25,7 @@ namespace Leopotam.Ecs.Ui.Actions {
 
         void OnInputValueChanged (string value) {
             if (IsValidForEvent ()) {
-                var msg = Emitter.CreateMessage<EcsUiTmpInputChangeEvent> ();
+                ref var msg = ref Emitter.CreateEntity ().Set<EcsUiTmpInputChangeEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = _input;
                 msg.Value = value;
@@ -34,7 +34,7 @@ namespace Leopotam.Ecs.Ui.Actions {
 
         void OnInputEnded (string value) {
             if (IsValidForEvent ()) {
-                var msg = Emitter.CreateMessage<EcsUiTmpInputEndEvent> ();
+                ref var msg = ref Emitter.CreateEntity ().Set<EcsUiTmpInputEndEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = _input;
                 msg.Value = value;

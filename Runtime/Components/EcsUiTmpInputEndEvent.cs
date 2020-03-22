@@ -8,13 +8,9 @@
 using TMPro;
 
 namespace Leopotam.Ecs.Ui.Components {
-    public sealed class EcsUiTmpInputEndEvent : IEcsAutoReset {
+    public struct EcsUiTmpInputEndEvent {
         public string WidgetName;
         public TMP_InputField Sender;
         public string Value;
-
-        void IEcsAutoReset.Reset () {
-            Sender = null;
-        }
     }
 }

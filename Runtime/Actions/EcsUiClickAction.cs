@@ -20,7 +20,7 @@ namespace Leopotam.Ecs.Ui.Actions {
         void IPointerClickHandler.OnPointerClick (PointerEventData eventData) {
             if ((eventData.pressPosition - eventData.position).sqrMagnitude < DragTreshold * DragTreshold) {
                 if (IsValidForEvent ()) {
-                    var msg = Emitter.CreateMessage<EcsUiClickEvent> ();
+                    ref var msg = ref Emitter.CreateEntity ().Set<EcsUiClickEvent> ();
                     msg.WidgetName = WidgetName;
                     msg.Sender = gameObject;
                     msg.Position = eventData.position;

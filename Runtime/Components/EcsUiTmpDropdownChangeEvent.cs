@@ -8,13 +8,9 @@
 using TMPro;
 
 namespace Leopotam.Ecs.Ui.Components {
-    public sealed class EcsUiTmpDropdownChangeEvent : IEcsAutoReset {
+    public struct EcsUiTmpDropdownChangeEvent {
         public string WidgetName;
         public TMP_Dropdown Sender;
         public int Value;
-
-        void IEcsAutoReset.Reset () {
-            Sender = null;
-        }
     }
 }

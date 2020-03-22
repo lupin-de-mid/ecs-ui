@@ -8,12 +8,8 @@
 using UnityEngine;
 
 namespace Leopotam.Ecs.Ui.Components {
-    public sealed class EcsUiEnterEvent : IEcsAutoReset {
+    public struct EcsUiEnterEvent {
         public string WidgetName;
         public GameObject Sender;
-
-        void IEcsAutoReset.Reset () {
-            Sender = null;
-        }
     }
 }

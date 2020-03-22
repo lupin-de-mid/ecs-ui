@@ -15,7 +15,7 @@ namespace Leopotam.Ecs.Ui.Actions {
     public sealed class EcsUiEnterExitAction : EcsUiActionBase, IPointerEnterHandler, IPointerExitHandler {
         void IPointerEnterHandler.OnPointerEnter (PointerEventData eventData) {
             if (IsValidForEvent ()) {
-                var msg = Emitter.CreateMessage<EcsUiEnterEvent> ();
+                ref var msg = ref Emitter.CreateEntity ().Set<EcsUiEnterEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = gameObject;
             }
@@ -23,7 +23,7 @@ namespace Leopotam.Ecs.Ui.Actions {
 
         void IPointerExitHandler.OnPointerExit (PointerEventData eventData) {
             if (IsValidForEvent ()) {
-                var msg = Emitter.CreateMessage<EcsUiExitEvent> ();
+                ref var msg = ref Emitter.CreateEntity ().Set<EcsUiExitEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = gameObject;
             }

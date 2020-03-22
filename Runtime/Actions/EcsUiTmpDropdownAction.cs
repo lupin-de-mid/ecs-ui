@@ -24,7 +24,7 @@ namespace Leopotam.Ecs.Ui.Actions {
 
         void OnDropdownValueChanged (int value) {
             if (IsValidForEvent ()) {
-                var msg = Emitter.CreateMessage<EcsUiTmpDropdownChangeEvent> ();
+                ref var msg = ref Emitter.CreateEntity ().Set<EcsUiTmpDropdownChangeEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = _dropdown;
                 msg.Value = value;
