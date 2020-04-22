@@ -1,7 +1,11 @@
-[![gitter](https://img.shields.io/gitter/room/leopotam/ecs.svg)](https://gitter.im/leopotam/ecs)
+[![discord](https://img.shields.io/discord/404358247621853185.svg?label=discord)](https://discord.gg/5GZVde6)
 [![license](https://img.shields.io/github/license/Leopotam/ecs-ui.svg)](https://github.com/Leopotam/ecs-ui/blob/develop/LICENSE)
 # Unity uGui extension for Entity Component System framework
 Easy bindings for events from Unity uGui to [ECS framework](https://github.com/Leopotam/ecs) - main goal of this extension.
+
+> **Important! It's "structs-based" version, if you search "classes-based" version - check [classes-based branch](https://github.com/Leopotam/ecs-ui/tree/classes-based)!**
+
+> C#7.3 or above required for this framework.
 
 > Tested on unity 2019.1 (dependent on Unity engine) and contains assembly definition for compiling to separate assembly file for performance reason.
 
@@ -26,14 +30,11 @@ Ecs run-system that generates entities with events data to `ecs world`. Should b
 ```csharp
 public class Startup : MonoBehaviour {
     // Field that should be initialized by instance of `EcsUiEmitter` assigned to Ui root GameObject.
-    [SerializeField]
-    EcsUiEmitter _uiEmitter = null;
+    [SerializeField] EcsUiEmitter _uiEmitter = null;
 
     EcsSystems _systems;
 
-    IEnumerator Start () {
-        // For correct registering named widgets at EcsUiEmitter.
-        yield return null;
+    void Start () {
         var world = new EcsWorld ();
         _systems = new EcsSystems (world)
             // Additional systems here...
@@ -70,12 +71,12 @@ Event data containers: `EcsUiClickEvent`, `EcsUiBeginDragEvent`, `EcsUiEndDragEv
 ```csharp
 public class TestUiClickEventSystem : IEcsRunSystem {
     // auto-injected fields.
-    EcsWorld _world = null;
-    EcsFilter<EcsUiClickEvent> _clickEvents = null;
+    readonly EcsWorld _world = null;
+    readonly EcsFilter<EcsUiClickEvent> _clickEvents = null;
 
     public void Run () {
-        foreach (var i in _clickEvents) {
-            EcsUiClickEvent data = _clickEvents.Get1[i];
+        foreach (var idx in _clickEvents) {
+            ref EcsUiClickEvent data = ref _clickEvents.Get1 (idx);
             Debug.Log ("Im clicked!", data.Sender);
         }
     }
@@ -86,15 +87,12 @@ public class TestUiClickEventSystem : IEcsRunSystem {
 ```csharp
 public class Startup : MonoBehaviour {
     // Field that should be initialized by instance of `EcsUiEmitter` assigned to Ui root GameObject.
-    [SerializeField]
-    EcsUiEmitter _uiEmitter = null;
+    [SerializeField] EcsUiEmitter _uiEmitter = null;
 
     EcsWorld _world;
     EcsSystems _systems;
 
-    IEnumerator Start () {
-        // For correct registering named widgets at EcsUiEmitter.
-        yield return null;
+    void Start () {
         _world = new EcsWorld ();
         _systems = new EcsSystems (_world);
         _systems
@@ -104,19 +102,16 @@ public class Startup : MonoBehaviour {
     }
 
     void Update () {
-        if (_systems != null) {
-            // Process systems.
-            _systems.Run ();
-            // Important: automatic clearing one-frame components (ui-events).
-            _world.EndFrame ();
-        }
+        _systems?.Run ();
     }
 
-    void OnDisable () {
-        _systems.Destroy ();
-        _systems = null;
-        _world.Destroy ();
-        _world = null;
+    void OnDestroy () {
+        if (_systems != null) {
+            _systems.Destroy ();
+            _systems = null;
+            _world.Destroy ();
+            _world = null;
+        }
     }
 }
 ```
