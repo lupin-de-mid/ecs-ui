@@ -24,7 +24,7 @@ namespace Leopotam.Ecs.Ui.Actions {
 
         void OnSliderValueChanged (float value) {
             if (IsValidForEvent ()) {
-                ref var msg = ref Emitter.CreateEntity ().Set<EcsUiSliderChangeEvent> ();
+                ref var msg = ref Emitter.CreateEntity ().Get<EcsUiSliderChangeEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = _slider;
                 msg.Value = value;

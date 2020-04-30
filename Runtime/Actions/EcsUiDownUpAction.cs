@@ -15,7 +15,7 @@ namespace Leopotam.Ecs.Ui.Actions {
     public sealed class EcsUiDownUpAction : EcsUiActionBase, IPointerDownHandler, IPointerUpHandler {
         void IPointerDownHandler.OnPointerDown (PointerEventData eventData) {
             if (IsValidForEvent ()) {
-                ref var msg = ref Emitter.CreateEntity ().Set<EcsUiDownEvent> ();
+                ref var msg = ref Emitter.CreateEntity ().Get<EcsUiDownEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = gameObject;
                 msg.Position = eventData.position;
@@ -26,7 +26,7 @@ namespace Leopotam.Ecs.Ui.Actions {
 
         void IPointerUpHandler.OnPointerUp (PointerEventData eventData) {
             if (IsValidForEvent ()) {
-                ref var msg = ref Emitter.CreateEntity ().Set<EcsUiUpEvent> ();
+                ref var msg = ref Emitter.CreateEntity ().Get<EcsUiUpEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = gameObject;
                 msg.Position = eventData.position;
