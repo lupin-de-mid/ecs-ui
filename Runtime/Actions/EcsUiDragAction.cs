@@ -15,7 +15,7 @@ namespace Leopotam.Ecs.Ui.Actions {
     public sealed class EcsUiDragAction : EcsUiActionBase, IBeginDragHandler, IDragHandler, IEndDragHandler {
         void IBeginDragHandler.OnBeginDrag (PointerEventData eventData) {
             if (IsValidForEvent ()) {
-                ref var msg = ref Emitter.CreateEntity ().Set<EcsUiBeginDragEvent> ();
+                ref var msg = ref Emitter.CreateEntity ().Get<EcsUiBeginDragEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = gameObject;
                 msg.Position = eventData.position;
@@ -26,7 +26,7 @@ namespace Leopotam.Ecs.Ui.Actions {
 
         void IDragHandler.OnDrag (PointerEventData eventData) {
             if (IsValidForEvent ()) {
-                ref var msg = ref Emitter.CreateEntity ().Set<EcsUiDragEvent> ();
+                ref var msg = ref Emitter.CreateEntity ().Get<EcsUiDragEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = gameObject;
                 msg.Position = eventData.position;
@@ -38,7 +38,7 @@ namespace Leopotam.Ecs.Ui.Actions {
 
         void IEndDragHandler.OnEndDrag (PointerEventData eventData) {
             if (IsValidForEvent ()) {
-                ref var msg = ref Emitter.CreateEntity ().Set<EcsUiEndDragEvent> ();
+                ref var msg = ref Emitter.CreateEntity ().Get<EcsUiEndDragEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = gameObject;
                 msg.Position = eventData.position;

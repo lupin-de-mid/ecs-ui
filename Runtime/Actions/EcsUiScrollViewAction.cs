@@ -24,7 +24,7 @@ namespace Leopotam.Ecs.Ui.Actions {
 
         void OnScrollViewValueChanged (Vector2 value) {
             if (IsValidForEvent ()) {
-                ref var msg = ref Emitter.CreateEntity ().Set<EcsUiScrollViewEvent> ();
+                ref var msg = ref Emitter.CreateEntity ().Get<EcsUiScrollViewEvent> ();
                 msg.WidgetName = WidgetName;
                 msg.Sender = _scrollView;
                 msg.Value = value;
